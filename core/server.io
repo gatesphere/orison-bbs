@@ -1,6 +1,7 @@
 // orison-bbs
 // server core
 
+
 ServerLogic := Object clone do(
   process := method(aSocket, aServer,
     if(aSocket isOpen, aSocket write("Welcome to orison-bbs!\n"))
@@ -11,6 +12,15 @@ ServerLogic := Object clone do(
       )
     ) 
   )
+)
+
+User := Object clone do(
+  username ::= nil
+  password ::= nil
+  email ::= nil
+  activated ::= false
+  sysop ::= false
+  logged_in ::= false
 )
 
 server := Server clone setPort(SERVER_PORT) do(
