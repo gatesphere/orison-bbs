@@ -20,13 +20,13 @@ server := Server clone setPort(SERVER_PORT) do(
   logfile := nil
   
   handleSocket := method(aSocket,
-    self log("Opening new socket, IP = #{aSocket address}")
+    self log("Opening new socket, IP = #{aSocket address}" interpolate)
     self open_sockets append(aSocket)
     ServerLogic clone @process(aSocket, self)
   )
 
   closeSocket := method(aSocket,
-    self log("Closing socket, IP = #{aSocket address}")
+    self log("Closing socket, IP = #{aSocket address}" interpolate)
     self open_sockets remove(aSocket)
     aSocket close
   )
@@ -47,7 +47,7 @@ server := Server clone setPort(SERVER_PORT) do(
   
   log := method(message,
     if(SERVER_LOGGING,
-      self logfile writeln("#{Date now}: #{message}" interpolate)
+      self logfile write("#{Date now}: #{message}\n" interpolate)
     )
   )
   
