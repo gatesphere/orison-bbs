@@ -10,10 +10,15 @@ Please log in.  Enter NEW to register.
 Username: """
      if(aSocket isOpen, 
        aSocket write(welcome)
-       uname := aSocket readBuffer asString
-       aSocket readBuffer empty
+       if(aSocket read,
+         uname := aSocket readBuffer asString
+         aSocket readBuffer empty
+       )
        aSocket write("Password: ")
-       password := aSocket readBuffer asString
+       if(aSocket read,
+         password := aSocket readBuffer asString
+         aSocket readBuffer empty
+       )
        aSocket write("\n\n You entered #{uname} #{password}" interpolate)
      )
   )
