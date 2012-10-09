@@ -8,7 +8,7 @@ Welcome to orison-bbs!
 Please log in.  Enter NEW to register.
 
 Username: """
-     if(aSocket open, 
+     if(aSocket isOpen, 
        aSocket write(welcome)
        uname := aSocket readBuffer asString
        aSocket readBuffer empty
