@@ -12,11 +12,12 @@ LoginModule := Module clone do(
   process := method(aSocket, aServer, aSession,
     sock := SocketHelper with(aSocket)
     sock write(self welcome)
-    sock write("Welcome.  Please log in below.  Use NEW to register.")
+    sock writeln("Welcome.  Please log in below.  Use NEW to register.")
+    sock write("Username: ")
     username := sock readln
     sock write("Password: ")
     password := sock readln
-    sock writeln("\n\nYou entered: #{username} #{password} #{blah}" interpolate)
+    sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
   )
 )
 
