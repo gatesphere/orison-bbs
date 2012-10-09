@@ -5,7 +5,7 @@
 
 // server config
 DATABASE_FILE := "orison-bbs.sqlite3"
-SERVER_PORT := 23
+SERVER_PORT := 1234
 
 // bootstrap the server core
 doFile("core/server.io")
