@@ -45,3 +45,8 @@ server := Server clone setPort(SERVER_PORT) do(
     self database close
   )
 )
+
+System userInterruptHandler := method(
+  writeln("Calling server stop.")
+  server stop
+)
