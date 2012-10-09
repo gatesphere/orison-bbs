@@ -35,6 +35,7 @@ server := Server clone setPort(SERVER_PORT) do(
   
   startLogging := method(
     if(SERVER_LOGGING,
+      File with(SERVER_LOGFILE) remove
       self logfile := File clone openForAppending(SERVER_LOGFILE)
     )
   )
