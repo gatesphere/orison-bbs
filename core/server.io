@@ -32,14 +32,6 @@ SocketHelper := Object clone do(
   writeln := method(message,
     self write("#{message}\n" interpolate)
   )
-
-  read := method(
-    if(self socket isOpen,
-      val := self socket readBuffer asString asMutable strip
-      self socket readBuffer empty
-      val
-    )
-  )
   
   readln := method(
     if(self socket isOpen,

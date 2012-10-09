@@ -2,19 +2,20 @@
 // login module
 
 LoginModule := Module clone do(
+  welcome := method(
+    f := File openForReading(WELCOME_BANNER)
+    b := f contents
+    f close
+    b
+  )
+  
   process := method(aSocket, aServer, aSession,
     sock := SocketHelper with(aSocket)
-    welcome := """
-Welcome to orison-bbs!
-Please log in.  Enter NEW to register.
-
-Username: """
-    sock write(welcome)
+    sock write(self welcome)
+    sock write("Welcome.  Please log in below.  Use NEW to register.")
     username := sock readln
     sock write("Password: ")
     password := sock readln
-    sock write("blah")
-    blah := sock read
     sock writeln("\n\nYou entered: #{username} #{password} #{blah}" interpolate)
   )
 )
