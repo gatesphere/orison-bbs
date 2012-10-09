@@ -53,7 +53,7 @@ server := Server clone setPort(SERVER_PORT) do(
   
   start := method(
     if(SERVER_LOGGING,
-      logfile := File openForUpdating(SERVER_LOGFILE)
+      self logfile := File openForUpdating(SERVER_LOGFILE)
     )
     log("Server starting up...  Listening on port #{self port}" interpolate)
     resend
