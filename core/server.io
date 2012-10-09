@@ -1,58 +1,6 @@
 // orison-bbs
 // server core
 
-
-ServerSession := Object clone do(
-  user ::= nil
-  current_module ::= nil
-  
-  init := method(
-    self setUser(nil)
-    self setCurrent_module(nil)
-  )
-  
-  process := method(aSocket, aServer,
-    self current_module := server modules at("login")
-    while(aSocket isOpen,
-      self current_module process(aSocket, aServer, self)
-    )
-    aServer closeSocket(aSocket) 
-  )
-)
-
-SocketHelper := Object clone do(
-  socket ::= nil
-  init := method(self setSocket(nil))
-  with := method(aSocket, self clone setSocket(aSocket))
-  
-  write := method(message,
-    if(self socket isOpen, self socket write(message))
-  )
-
-  writeln := method(message,
-    self write("#{message}\n" interpolate)
-  )
-  
-  readln := method(
-    if(self socket isOpen,
-      if(self socket read,
-        val := self socket readBuffer asString asMutable strip
-        self socket readBuffer empty
-        val
-      )
-    )
-  )
-)
-
-User := Object clone do(
-  username ::= nil
-  password ::= nil
-  email ::= nil
-  activated ::= false
-  sysop ::= false
-  logged_in ::= false
-)
-
 server := Server clone setPort(SERVER_PORT) do(
   modules := Map clone
   database := nil

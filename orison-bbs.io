@@ -8,10 +8,10 @@ DATABASE_FILE := "orison-bbs.sqlite3"
 SERVER_PORT := 1234
 SERVER_LOGGING := true
 SERVER_LOGFILE := "orison-bbs.log"
-WELCOME_BANNER := "welcomebanner.ansi"
+WELCOME_BANNER := "welcomebanner.ans"
 
 // bootstrap the server core
-doFile("core/server.io")
+doFile("core/core.io")
 
 // start logging if enabled
 server startLogging
