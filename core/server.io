@@ -30,7 +30,7 @@ User := Object clone do(
 )
 
 server := Server clone setPort(SERVER_PORT) do(
-  modules := list
+  modules := Map clone
   database := nil
   open_sockets := list
   logfile := nil
@@ -49,7 +49,7 @@ server := Server clone setPort(SERVER_PORT) do(
 
   loadModules := method(
     log("Loading modules...")
-    modules := list
+    modules := Map clone
     Lobby doFile("modules/modules.io")
     log("Modules loaded.")
   )

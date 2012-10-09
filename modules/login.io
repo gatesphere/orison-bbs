@@ -18,3 +18,5 @@ Username: """
      )
   )
 )
+
+server modules atPut("login", LoginModule)
