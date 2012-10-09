@@ -13,7 +13,7 @@ Username: """
     username := sock readln
     sock write("Password: ")
     password := sock readln
-    sock writeln("\n\nYou entered: #{username} #{password}")
+    sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
   )
 )
 
