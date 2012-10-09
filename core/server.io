@@ -2,15 +2,21 @@
 // server core
 
 
-ServerLogic := Object clone do(
+ServerSession := Object clone do(
+  user ::= nil
+  current_module ::= nil
+  
+  init := method(
+    self setUser(nil)
+    self setCurrent_module(nil)
+  )
+  
   process := method(aSocket, aServer,
-    if(aSocket isOpen, aSocket write("Welcome to orison-bbs!\n"))
+    self current_module := server modules at("login")
     while(aSocket isOpen,
-      if(aSocket read,
-        cmd := aSocket readBuffer asString
-        aSocket readBuffer empty
-      )
-    ) 
+      self current_module process(aSocket, aServer, self)
+    )
+    aServer closeSocket(aSocket) 
   )
 )
 
@@ -32,7 +38,7 @@ server := Server clone setPort(SERVER_PORT) do(
   handleSocket := method(aSocket,
     self log("Opening new socket, IP = #{aSocket address}" interpolate)
     self open_sockets append(aSocket)
-    ServerLogic clone @process(aSocket, self)
+    ServerSession clone @process(aSocket, self)
   )
 
   closeSocket := method(aSocket,
