@@ -3,24 +3,17 @@
 
 LoginModule := Module clone do(
   process := method(aSocket, aServer, aSession,
+    sock := SocketHelper with(aSocket)
     welcome := """
 Welcome to orison-bbs!
 Please log in.  Enter NEW to register.
 
 Username: """
-     if(aSocket isOpen, 
-       aSocket write(welcome)
-       if(aSocket read,
-         uname := aSocket readBuffer asString
-         aSocket readBuffer empty
-       )
-       aSocket write("Password: ")
-       if(aSocket read,
-         password := aSocket readBuffer asString
-         aSocket readBuffer empty
-       )
-       aSocket write("\n\n You entered #{uname} #{password}" interpolate)
-     )
+    sock write(welcome)
+    username := sock readln
+    sock write("Password: ")
+    password := sock readln
+    sock writeln("\n\nYou entered: #{username} #{password}")
   )
 )
 
