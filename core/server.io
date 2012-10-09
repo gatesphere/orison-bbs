@@ -17,7 +17,7 @@ server := Server clone setPort(SERVER_PORT) do(
   modules := list
   database := nil
   open_sockets := list
-  if(SERVER_LOGGING, self logfile := File openForUpdating(SERVER_LOGFILE))
+  logfile := nil
   
   handleSocket := method(aSocket,
     self log("Opening new socket, IP = #{aSocket address}")
@@ -49,6 +49,14 @@ server := Server clone setPort(SERVER_PORT) do(
     if(SERVER_LOGGING,
       self logfile writeln("#{Date now}: #{message}" interpolate)
     )
+  )
+  
+  start := method(
+    if(SERVER_LOGGING,
+      logfile := File openForUpdating(SERVER_LOGFILE)
+    )
+    log("Server starting up...  Listening on port #{self port}" interpolate)
+    resend
   )
   
   stop := method(
