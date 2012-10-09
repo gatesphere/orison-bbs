@@ -49,4 +49,5 @@ server := Server clone setPort(SERVER_PORT) do(
 System userInterruptHandler := method(
   writeln("Calling server stop.")
   server stop
+  self exit
 )
