@@ -50,20 +50,6 @@ SocketHelper := Object clone do(
       )
     )
   )
-  
-  readpw := method(
-    if(self socket isOpen,
-      a := self socket readBytes(1) asString asMutable
-      self socket write(8 asCharacter)
-      self socket write("*")
-      while(a endsWithSeq("\n") not,
-        a = a .. self socket readbytes(1) asString asMutable
-        self socket write(8 asCharacter)
-        self socket write("*")
-      )
-      a
-    )
-  )
 )
 
 User := Object clone do(
