@@ -12,6 +12,9 @@ SERVER_LOGFILE := "orison-bbs.log"
 // bootstrap the server core
 doFile("core/server.io")
 
+// start logging if enabled
+server startLogging
+
 // initialize the database
 server initializeDatabase
 

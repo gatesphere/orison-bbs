@@ -45,6 +45,12 @@ server := Server clone setPort(SERVER_PORT) do(
     log("Database initialized.")
   )
   
+  startLogging := method(
+    if(SERVER_LOGGING,
+      self logfile := File clone openForAppending(SERVER_LOGFILE)
+    )
+  )
+  
   log := method(message,
     if(SERVER_LOGGING,
       self logfile write("#{Date now}: #{message}\n" interpolate)
@@ -52,9 +58,6 @@ server := Server clone setPort(SERVER_PORT) do(
   )
   
   start := method(
-    if(SERVER_LOGGING,
-      self logfile := File clone openForAppending(SERVER_LOGFILE)
-    )
     log("Server starting up...  Listening on port #{self port}" interpolate)
     resend
   )
