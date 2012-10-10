@@ -2,6 +2,9 @@
 // login module
 
 LoginModule := Module clone do(
+  name := "login"
+  description := "Allows logging into the system."
+  
   welcome := method(
     f := File openForReading(WELCOME_BANNER)
     b := f contents
@@ -11,14 +14,17 @@ LoginModule := Module clone do(
   
   process := method(aSocket, aServer, aSession,
     sock := SocketHelper with(aSocket)
+    sock write(ANSIHelper cls)
     sock write(self welcome)
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")
     username := sock readln asMutable strip
+    if(username asLowercase == "new",
+      aSession setModule("newuser")
     sock write("Password: ")
     password := sock readln asMutable strip
     sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
   )
 )
 
-server modules atPut("login", LoginModule)
+server addModule(LoginModule)

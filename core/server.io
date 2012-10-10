@@ -26,6 +26,11 @@ server := Server clone setPort(SERVER_PORT) do(
     log("Modules loaded.")
   )
   
+  addModule := method(module,
+    self modules atPut(module name, module)
+    log("Loaded module #{module name}" interpolate)
+  )
+  
   initializeDatabase := method(
     log("Initializing database...")
     self database := SQLite3 clone setPath(DATABASE_FILE)
