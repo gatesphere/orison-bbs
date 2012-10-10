@@ -21,6 +21,7 @@ LoginModule := Module clone do(
     username := sock readln asMutable strip
     if(username asLowercase == "new",
       aSession setModule("newuser")
+      return
       ,
       sock write("Password: ")
       password := sock readln asMutable strip
