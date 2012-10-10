@@ -14,6 +14,12 @@ SocketHelper := Object clone do(
     self write("#{message}\n" interpolate)
   )
   
+  empty := method(
+    if(self socket isOpen,
+      self socket readBuffer empty
+    )
+  )
+  
   readln := method(
     if(self socket isOpen,
       self socket readBuffer empty

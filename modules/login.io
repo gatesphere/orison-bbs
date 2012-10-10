@@ -16,6 +16,7 @@ LoginModule := Module clone do(
     sock := SocketHelper with(aSocket)
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
+    sock empty
     sock write(self welcome)
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")
