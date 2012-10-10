@@ -14,6 +14,7 @@ LoginModule := Module clone do(
   
   process := method(aSocket, aServer, aSession,
     sock := SocketHelper with(aSocket)
+    // negotiation here
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty
@@ -21,8 +22,6 @@ LoginModule := Module clone do(
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")
     username := sock readln asMutable strip
-    writeln(username)
-    username foreach(i, writeln(i))
     if(username asLowercase == "new",
       aSession setModule("newuser")
       return
