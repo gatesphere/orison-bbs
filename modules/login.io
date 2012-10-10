@@ -14,9 +14,9 @@ LoginModule := Module clone do(
     sock write(self welcome)
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")
-    username := sock readln
+    username := sock readln asMutable strip
     sock write("Password: ")
-    password := sock readln
+    password := sock readln asMutable strip
     sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
   )
 )
