@@ -1,0 +1,19 @@
+#!/bin/bash
+
+##
+## orison-bbs
+##
+## This script starts the server using authbind
+## to allow it to run from port 23 without root.
+## This requires authbind to be installed on 
+## your system and configured correctly.
+##
+## PeckJ 20121010
+##
+
+## variables
+IO=`which io`
+AUTHBIND=`which authbind`
+SERVERSCRIPT="orison-bbs.io"
+
+$AUTHBIND $IO $SERVERSCRIPT

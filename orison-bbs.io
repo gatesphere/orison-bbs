@@ -5,7 +5,7 @@
 
 // server config
 DATABASE_FILE := "orison-bbs.sqlite3"
-SERVER_PORT := 1234
+SERVER_PORT := 23
 SERVER_LOGGING := true
 SERVER_LOGFILE := "orison-bbs.log"
 WELCOME_BANNER := "welcomebanner.ans"
