@@ -2,7 +2,7 @@
 // newuser module
 
 NewUserModule := Module clone do(
-  name := "newuser")
+  name := "newuser"
   description := "Allows users to register."
   
   process := method(aSocket, aServer, aSession,
