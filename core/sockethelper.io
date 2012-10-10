@@ -16,11 +16,9 @@ SocketHelper := Object clone do(
   
   readln := method(
     if(self socket isOpen,
-      if(self socket read,
-        val := self socket readBuffer asString asMutable strip
-        self socket readBuffer empty
-        val
-      )
+      val := self socket readUntilSeq("\n") strip
+      //self socket readBuffer empty
+      val
     )
   )
 )
