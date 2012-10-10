@@ -16,6 +16,7 @@ SocketHelper := Object clone do(
   
   readln := method(
     if(self socket isOpen,
+      self socket readBuffer empty
       val := self socket readUntilSeq("\n")
       self socket readBuffer empty
       val
