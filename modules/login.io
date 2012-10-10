@@ -21,6 +21,7 @@ LoginModule := Module clone do(
     sock write("Username: ")
     username := sock readln asMutable strip
     writeln(username)
+    username foreach(i, writeln(i))
     if(username asLowercase == "new",
       aSession setModule("newuser")
       return
