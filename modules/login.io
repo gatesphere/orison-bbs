@@ -21,9 +21,11 @@ LoginModule := Module clone do(
     username := sock readln asMutable strip
     if(username asLowercase == "new",
       aSession setModule("newuser")
-    sock write("Password: ")
-    password := sock readln asMutable strip
-    sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
+      ,
+      sock write("Password: ")
+      password := sock readln asMutable strip
+      sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
+    )
   )
 )
 
