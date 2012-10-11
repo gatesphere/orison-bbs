@@ -22,7 +22,7 @@ ServerSession := Object clone do(
     sock negotiate
     self setModule("login")
     while(aSocket isOpen,
-      self current_module process(aSocket, aServer, self)
+      self current_module process(aSocket, self)
     )
     aServer closeSocket(aSocket) 
   )

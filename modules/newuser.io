@@ -5,10 +5,10 @@ NewUserModule := Module clone do(
   name := "newuser"
   description := "Allows users to register."
   
-  process := method(aSocket, aServer, aSession,
+  process := method(aSocket, aSession,
     sock := SocketHelper with(aSocket)
     sock write("not yet implemented.")
-    aServer closeSocket(aSocket)
+    aSession server closeSocket(aSocket)
   )
 )
 

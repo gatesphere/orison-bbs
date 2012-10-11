@@ -12,7 +12,7 @@ LoginModule := Module clone do(
     b
   )
   
-  process := method(aSocket, aServer, aSession,
+  process := method(aSocket, aSession,
     sock := SocketHelper with(aSocket)
     // negotiation here
     sock write(ANSIHelper cls)
