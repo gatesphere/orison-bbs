@@ -28,7 +28,7 @@ server := Server clone setPort(SERVER_PORT) do(
   
   addModule := method(module,
     self modules atPut(module name, module)
-    self database exec(module db_init)
+    if(module db_init != nil, self database exec(module db_init))
     log("Loaded module #{module name}" interpolate)
   )
   
