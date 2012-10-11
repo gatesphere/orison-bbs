@@ -14,38 +14,38 @@ NewUserModule := Module clone do(
     
     // username
     sock write("Username: ")
-    username := sock readln
+    username := sock readln asMutable strip
     while(self check_username(username, aSession server) not,
       sock writeln("That username is either already in use, or invalid.")
       sock write("Username: ")
-      username := sock readln
+      username := sock readln asMutable strip
     )
     
     // password
     sock write("Password: ")
-    password := sock readln
+    password := sock readln asMutable strip
     while(self check_password(password) not,
       sock writeln("That password is invalid.")
       sock write("Password: ")
-      password := sock readln
+      password := sock readln asMutable strip
     )
     
     // email
     sock write("Email address: ")
-    email := sock readln
+    email := sock readln asMutable strip
     while(self check_email(email) not,
       sock writeln("That email address is invalid.")
       sock write("email: ")
-      email := sock readln
+      email := sock readln asMutable strip
     )
     
     // real name
     sock write("Real name: ")
-    realname := sock readln
+    realname := sock readln asMutable strip
     while(self check_realname(realname) not,
       sock writeln("That real name is invalid.")
       sock write("Real name: ")
-      realname := sock readln
+      realname := sock readln asMutable strip
     )
     
     // create user
