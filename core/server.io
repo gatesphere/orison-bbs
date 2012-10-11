@@ -36,6 +36,7 @@ server := Server clone setPort(SERVER_PORT) do(
     log("Initializing database...")
     self database := SQLite3 clone setPath(DATABASE_FILE)
     self database open
+    if(DATABASE_DEBUG, self database debugOn)
     log("Database initialized.")
   )
   
