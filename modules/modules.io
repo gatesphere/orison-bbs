@@ -4,6 +4,7 @@
 Module := Object clone do(
   name ::= nil
   description ::= nil
+  db_init ::= nil
 )
 
 list(
