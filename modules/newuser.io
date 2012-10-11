@@ -55,11 +55,23 @@ NewUserModule := Module clone do(
   )
   
   check_username := method(username,
-    
+    // stub
+    true
   )
   
   check_password := method(password,
-    
+    // stub
+    true
+  )
+  
+  check_email := method(email,
+    // stub
+    true
+  )
+  
+  check_realname := method(realname,
+    // stub
+    true
   )
   
   save_user := method(username, password, email, realname, aServer,
