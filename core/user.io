@@ -26,6 +26,6 @@ User := Object clone do(
   
   has_password := method(password,
     p := self hash_password(password)
-    v := 
+    //v := 
   )
 )
