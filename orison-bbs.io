@@ -10,6 +10,7 @@ SERVER_PORT := 23
 SERVER_LOGGING := true
 SERVER_LOGFILE := "orison-bbs.log"
 WELCOME_BANNER := "welcomebanner.ans"
+SYSOP_EMAIL := "sysop@suspended-chord.info"
 
 // bootstrap the server core
 doFile("core/core.io")
