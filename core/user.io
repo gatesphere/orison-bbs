@@ -21,7 +21,7 @@ User := Object clone do(
     db exec("""INSERT INTO Users ('username', 'password', 'realname', 
 'email', 'activated', 'sysop', 'logged_in') VALUES ('#{self username}', 
 '#{self hashed_password}', '#{self realname}', '#{self email}',
-'false', 'false', 'false')""")
+'false', 'false', 'false')""" interpolate)
   )
   
   has_password := method(password,
