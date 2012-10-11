@@ -60,7 +60,7 @@ NewUserModule := Module clone do(
   
   check_username := method(username, server,
     if(username size == 0, return false)
-    val := server database exec("SELECT * FROM Users WHERE 'username' = '#{username}'" interpolate)
+    val := server database exec("SELECT * FROM Users WHERE username='#{username}'" interpolate)
     if(val == nil or val size > 0, return false)
     true
   )
