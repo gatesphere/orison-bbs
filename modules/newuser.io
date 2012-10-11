@@ -77,7 +77,7 @@ NewUserModule := Module clone do(
   
   save_user := method(username, password, email, realname, aServer,
     u := User clone
-    u setUsername(username) setEmail(email) setRealname
+    u setUsername(username) setEmail(email) setRealname(realname)
     u setHashed_password(u hash_password(password))
     u create(aServer)
   )
