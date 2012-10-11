@@ -18,6 +18,8 @@ ServerSession := Object clone do(
   
   process := method(aSocket, aServer,
     self server := aServer
+    sock := SocketHelper with(aSocket)
+    sock negotiate
     self setModule("login")
     while(aSocket isOpen,
       self current_module process(aSocket, aServer, self)
