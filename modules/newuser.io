@@ -51,6 +51,7 @@ NewUserModule := Module clone do(
     sock writeln("You will only have GUEST priveleges until your account is activated.")
     sock writeln("To activate your account, send an email to #{SYSOP_EMAIL} from the address you used here." interpolate)
     sock writeln("Press <ENTER> to continue...")
+    sock readln
     aSession setModule("login")
   )
   
