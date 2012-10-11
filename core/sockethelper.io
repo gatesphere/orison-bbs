@@ -34,7 +34,7 @@ SocketHelper := Object clone do(
   readln := method(
     if(self socket isOpen,
       self socket readBuffer empty
-      val := self socket readUntilSeq(0x0A asCharacter)
+      val := self socket readUntilSeq("\r\n")
       self socket readBuffer empty
       val
     )
