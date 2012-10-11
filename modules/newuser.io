@@ -10,6 +10,8 @@ NewUserModule := Module clone do(
     sock write("not yet implemented.")
     aSession server closeSocket(aSocket)
   )
+  
+  db_init := "CREATE TABLE Users (username, password, email, realname, activated, sysop, logged_in)"
 )
 
 server addModule(NewUserModule)
