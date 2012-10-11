@@ -14,7 +14,6 @@ LoginModule := Module clone do(
   
   process := method(aSocket, aSession,
     sock := SocketHelper with(aSocket)
-    // negotiation here
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty

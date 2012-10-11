@@ -7,12 +7,15 @@ NewUserModule := Module clone do(
   
   process := method(aSocket, aSession,
     sock := SocketHelper with(aSocket)
+    sock write(ANSIHelper cls)
+    sock write(ANSIHelper cursor_set(0,0))
+    sock empty
     sock writeln("Please provide the information requested to register.")
     
     // username
     sock write("Username: ")
     username := sock readln
-    while(self check_username(username) not,
+    while(self check_username(username, aSession server) not,
       sock writeln("That username is either already in use, or invalid.")
       sock write("Username: ")
       username := sock readln
@@ -55,24 +58,23 @@ NewUserModule := Module clone do(
     aSession setModule("login")
   )
   
-  check_username := method(username,
-    // stub
+  check_username := method(username, server,
+    if(username size == 0, return false)
+    val := server database exec("SELECT * FROM Users WHERE 'username' = '#{username}" interpolate)
+    if(val == nil or val size > 0, return false)
     true
   )
   
   check_password := method(password,
-    // stub
-    true
+    password size > 3
   )
   
   check_email := method(email,
-    // stub
-    true
+    email containsSeq("@") and email containsSeq(".")
   )
   
   check_realname := method(realname,
-    // stub
-    true
+    realname size > 0
   )
   
   save_user := method(username, password, email, realname, aServer,
