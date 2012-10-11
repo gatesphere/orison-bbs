@@ -18,10 +18,7 @@ User := Object clone do(
   
   create := method(server,
     db := server database
-    db exec("""INSERT INTO Users ('username', 'password', 'realname', 
-'email', 'activated', 'sysop', 'logged_in') VALUES ('#{self username}', 
-'#{self hashed_password}', '#{self realname}', '#{self email}',
-'false', 'false', 'false')""" interpolate)
+    db exec("INSERT INTO Users ('username', 'password', 'realname', 'email', 'activated', 'sysop', 'logged_in') VALUES ('#{self username}', '#{self hashed_password}', '#{self realname}', '#{self email}', 'false', 'false', 'false')" interpolate)
   )
   
   has_password := method(password,
