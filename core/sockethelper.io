@@ -17,12 +17,22 @@ SocketHelper := Object clone do(
   send := 1
   nop := 241
   
+  newline := "\r\n"
+  
   write := method(message,
     if(self socket isOpen, self socket write(message))
   )
 
   writeln := method(message,
-    self write("#{message}\n" interpolate)
+    self write("#{message}#{self newline}" interpolate)
+  )
+  
+  writeansi := method(file,
+    f := File openForReading(file)
+    f foreachLine(l,
+      self writeln(l)
+    )
+    f close
   )
   
   empty := method(
@@ -33,10 +43,9 @@ SocketHelper := Object clone do(
   
   readln := method(
     if(self socket isOpen,
-      self socket readBuffer empty
-      val := self socket readUntilSeq("\r\n")
-      self socket readBuffer empty
-      val
+      self empty
+      val := self socket readUntilSeq(self newline)
+      if(val not or val isError, return self readln, return val) // retry on timeouts
     )
   )
   
@@ -49,6 +58,7 @@ SocketHelper := Object clone do(
     )
   )
   
+  // dumb server - reject any attempts to negotiate.
   negotiateWrite := method(commands,
     resp := list
     iac_rcvd := false
@@ -57,6 +67,7 @@ SocketHelper := Object clone do(
     do_rcvd := false
     dont_rcvd := false
     sb_rcvd := false
+    cmd_end := false
     commands foreach(c,
       if(sb_rcvd and c != self se, continue, sb_rcvd = false)
       if(c == self iac, iac_rcvd = true; continue)
@@ -68,33 +79,22 @@ SocketHelper := Object clone do(
       if(iac_rcvd,
         if(will_rcvd, 
           resp append(self iac) append(self dont) append(c)
-          iac_rcvd = false
-          will_rcvd = false
-          wont_rcvd = false
-          do_rcvd = false
-          dont_rcvd = false
-          sb_rcvd = false
+          cmd_end = true
         )
         if(wont_rcvd, 
           resp append(self iac) append(self dont) append(c)
-          iac_rcvd = false
-          will_rcvd = false
-          wont_rcvd = false
-          do_rcvd = false
-          dont_rcvd = false
-          sb_rcvd = false
+          cmd_end = true
         )
         if(do_rcvd, 
           resp append(self iac) append(self wont) append(c)
-          iac_rcvd = false
-          will_rcvd = false
-          wont_rcvd = false
-          do_rcvd = false
-          dont_rcvd = false
-          sb_rcvd = false
+          cmd_end = true
         )
         if(dont_rcvd, 
           resp append(self iac) append(self wont) append(c)
+          cmd_end = true
+        )
+        if(cmd_end,
+          cmd_end = false
           iac_rcvd = false
           will_rcvd = false
           wont_rcvd = false

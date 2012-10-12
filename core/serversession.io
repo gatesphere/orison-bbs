@@ -21,8 +21,14 @@ ServerSession := Object clone do(
     sock := SocketHelper with(aSocket)
     sock negotiate
     self setModule("login")
+    
     while(aSocket isOpen,
-      self current_module process(aSocket, self)
+      e := try(
+        self current_module process(aSocket, self)
+      )
+      e catch(Exception,
+        aServer closeSocket(aSocket)
+      )
     )
     aServer closeSocket(aSocket) 
   )
