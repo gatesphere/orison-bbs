@@ -20,7 +20,21 @@ LoginModule := Module clone do(
       ,
       sock write("Password: ")
       password := sock readln asMutable strip
-      sock writeln("\n\nYou entered: #{username} #{password}" interpolate)
+      self validate(username, password, aSession)
+    )
+  )
+
+  validate := method(username, password, aSession,
+    db := aSession server database
+    res := db exec("SELECT * from Users where username='#{username}' LIMIT 1" interpolate) at(0)
+    if(res == nil, return false)
+    u := User from_row(res)
+    if(u has_password(password),
+      u setLogged_in(true) 
+      aSession setUser(u)
+      aSession setModule("menu")
+      ,
+      return false
     )
   )
 )

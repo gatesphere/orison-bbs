@@ -18,13 +18,24 @@ User := Object clone do(
   
   create := method(server,
     db := server database
-    query := "INSERT INTO Users ('username', 'password', 'realname', 'email', 'activated', 'sysop', 'logged_in') VALUES ('#{self username}', '#{self hashed_password}', '#{self realname}', '#{self email}', 'false', 'false', 'false')" interpolate
+    query := "INSERT INTO Users ('username', 'password', 'realname', 'email', 'activated', 'sysop') VALUES ('#{self username}', '#{self hashed_password}', '#{self realname}', '#{self email}', 0, 0)" interpolate
     server log("query = #{query}" interpolate)
     db exec(query)
   )
   
   has_password := method(password,
     p := self hash_password(password)
-    //v := 
+    if(p == self hashed_password, return true, return false) 
+  )
+
+  from_row := method(row,
+    u := self clone
+    u setUsername(row at("username"))
+    u setHashed_password(row at("password"))
+    u setRealname(row at("realname"))
+    u setEmail(row at("email"))
+    u setActivated(row at("activated"))
+    u setSysop(row at("sysop"))
+    u
   )
 )

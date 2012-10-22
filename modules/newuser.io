@@ -84,7 +84,7 @@ NewUserModule := Module clone do(
     u create(aServer)
   )
   
-  db_init := "CREATE TABLE Users (username, password, email, realname, activated, sysop, logged_in)"
+  db_init := "CREATE TABLE Users (id integer primary key autoincrement, username text, password text, email text, realname text, activated integer, sysop integer)"
 )
 
 server addModule(NewUserModule)
