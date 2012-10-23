@@ -10,5 +10,7 @@ Module := Object clone do(
 list(
   "login.io",
   "newuser.io",
-  "menu.io"
+  "menu.io",
+  "reloadmodules.io",
+  "servershutdown.io"
 ) foreach(m, doFile("modules/#{m}" interpolate))
