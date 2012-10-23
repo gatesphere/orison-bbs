@@ -6,6 +6,7 @@ SocketHelper := Object clone do(
   init := method(self setSocket(nil))
   with := method(aSocket, self clone setSocket(aSocket))
   
+  // negotiation stuff
   iac := 255
   will := 251
   wont := 252
@@ -16,7 +17,7 @@ SocketHelper := Object clone do(
   is := 0
   send := 1
   nop := 241
-  
+
   newline := "\r\n"
   
   write := method(message,
@@ -77,7 +78,7 @@ SocketHelper := Object clone do(
       if(c == self dont, dont_rcvd = true; continue)
       if(c == self sb, sb_rcvd = true; continue)
       if(iac_rcvd,
-        if(will_rcvd, 
+        if(will_rcvd,
           resp append(self iac) append(self dont) append(c)
           cmd_end = true
         )
