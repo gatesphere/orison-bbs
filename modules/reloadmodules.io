@@ -5,8 +5,8 @@ ReloadModulesModule := Module clone do(
   name := "reloadmodules"
   description := "Reloads all the modules."
   
-  process := method(aSocket, aSession,
-    sock := SocketHelper with(aSocket)
+  process := method(aSession,
+    sock := aSession sockethelper
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty

@@ -34,8 +34,8 @@ User := Object clone do(
     u setHashed_password(row at("password"))
     u setRealname(row at("realname"))
     u setEmail(row at("email"))
-    u setActivated(row at("activated"))
-    u setSysop(row at("sysop"))
+    u setActivated(row at("activated") == "1")
+    u setSysop(row at("sysop") == "1")
     u
   )
 )

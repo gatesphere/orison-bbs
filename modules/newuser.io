@@ -5,8 +5,8 @@ NewUserModule := Module clone do(
   name := "newuser"
   description := "Allows users to register."
   
-  process := method(aSocket, aSession,
-    sock := SocketHelper with(aSocket)
+  process := method(aSession,
+    sock := aSession sockethelper
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty

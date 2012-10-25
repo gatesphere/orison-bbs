@@ -5,8 +5,8 @@ MenuModule := Module clone do(
   name := "menu"
   description := "Allows interacting with the system."
   
-  process := method(aSocket, aSession,
-    sock := SocketHelper with(aSocket)
+  process := method(aSession,
+    sock := aSession sockethelper
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty
@@ -31,10 +31,10 @@ MenuModule := Module clone do(
     )
     sock write("Please enter your selection: ")
     in = sock readln
-    self select(in, aSocket, aSession)
+    self select(in, aSession)
   )
 
-  select := method(choice, aSocket, aSession,
+  select := method(choice, aSession,
     choice switch(
       "1", aSession setModule("conferencehall"),
       "2", aSession setModule("mailbox"),

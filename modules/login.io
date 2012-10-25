@@ -5,8 +5,8 @@ LoginModule := Module clone do(
   name := "login"
   description := "Allows logging into the system."
   
-  process := method(aSocket, aSession,
-    sock := SocketHelper with(aSocket)
+  process := method(aSession,
+    sock := aSession sockethelper
     sock write(ANSIHelper cls)
     sock write(ANSIHelper cursor_set(0,0))
     sock empty
