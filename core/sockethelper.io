@@ -41,7 +41,7 @@ SocketHelper := Object clone do(
       self socket readBuffer empty
     )
   )
-  
+
   readln := method(
     if(self socket isOpen,
       self empty
@@ -106,5 +106,10 @@ SocketHelper := Object clone do(
       )
     )
     self write(resp map(asCharacter) join)
+  )
+  
+  clearscreen := method(
+    self write(ANSIHelper cls)
+    self write(ANSIHelper cursor_set(0,0))
   )
 )

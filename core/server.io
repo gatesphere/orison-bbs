@@ -44,12 +44,15 @@ server := Server clone setPort(SERVER_PORT) do(
     if(SERVER_LOGGING,
       File with(SERVER_LOGFILE) remove
       self logfile := File clone openForAppending(SERVER_LOGFILE)
+      self logfile close
     )
   )
   
   log := method(message,
     if(SERVER_LOGGING,
+      self logfile := File clone openForAppending(SERVER_LOGFILE)
       self logfile write("#{Date now}: #{message}\n" interpolate)
+      self logfile close
     )
   )
   
@@ -67,7 +70,6 @@ server := Server clone setPort(SERVER_PORT) do(
     log("Closing the database...")
     self database close
     log("Server stopped.")
-    self logfile close
     System exit
   )
 )

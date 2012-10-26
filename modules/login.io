@@ -7,9 +7,7 @@ LoginModule := Module clone do(
   
   process := method(aSession,
     sock := aSession sockethelper
-    sock write(ANSIHelper cls)
-    sock write(ANSIHelper cursor_set(0,0))
-    sock empty
+    sock clearscreen
     sock writeansi(WELCOME_BANNER)
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")

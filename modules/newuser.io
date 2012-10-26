@@ -7,9 +7,7 @@ NewUserModule := Module clone do(
   
   process := method(aSession,
     sock := aSession sockethelper
-    sock write(ANSIHelper cls)
-    sock write(ANSIHelper cursor_set(0,0))
-    sock empty
+    sock clearscreen
     sock writeln("Please provide the information requested to register.")
     
     // username
@@ -52,8 +50,9 @@ NewUserModule := Module clone do(
     self save_user(username, password, email, realname, aSession server)
     sock writeln("Your new user has been created.")
     sock writeln("You will only have GUEST priveleges until your account is activated.")
-    sock writeln("To activate your account, send an email to #{SYSOP_EMAIL} from the address you used here." interpolate)
-    sock writeln("Press <ENTER> to continue...")
+    sock writeln("To activate your account, send an email to #{SYSOP_EMAIL} from" interpolate)
+    sock writeln("the address you used here.")
+    sock writeln("Press <ENTER> to continue.")
     sock readln
     aSession setModule("login")
   )

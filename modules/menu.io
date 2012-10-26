@@ -7,9 +7,7 @@ MenuModule := Module clone do(
   
   process := method(aSession,
     sock := aSession sockethelper
-    sock write(ANSIHelper cls)
-    sock write(ANSIHelper cursor_set(0,0))
-    sock empty
+    sock clearscreen
     user := aSession user
     sock writeln("Welcome to orison-bbs, #{user username}." interpolate)
     if(user activated not, 

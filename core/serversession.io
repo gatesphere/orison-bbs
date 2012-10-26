@@ -29,6 +29,10 @@ ServerSession := Object clone do(
     self setModule("login")
     
     while(aSocket isOpen,
+      if(self current_module == nil, 
+        self setModule("menu")
+        Module not_yet_implemented(self)
+      )
       e := try(
         self current_module process(self)
       )
