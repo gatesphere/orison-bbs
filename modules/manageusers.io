@@ -28,7 +28,8 @@ ManageUsersModule := Module clone do(
     sock writeln(" 3. Deactivate user by username")
     sock writeln(" 4. Give user sysop by username")
     sock writeln(" 5. Edit user info by username")
-    sock writeln(" 6. Return to main menu")
+    sock writeln(" 6. Change user password")
+    sock writeln(" 7. Return to main menu")
     sock write("Please enter your selection: ")
     choice := sock readln
     self processaction(aSession, choice)
@@ -41,7 +42,8 @@ ManageUsersModule := Module clone do(
       "3", self deactivateuser(aSession),
       "4", self sysopuser(aSession),
       "5", self edituser(aSession),
-      "6", return,
+      "6", self passworduser(aSession),
+      "7", return,
       self menu(aSession)
     )
   )
@@ -84,23 +86,106 @@ ManageUsersModule := Module clone do(
   )
 
   activateuser := method(aSession,
-    self not_yet_implemented(aSession)
-    self menu(aSession)
+    sock := aSession sockethelper
+    user := self promptforuser(aSession)
+    if(user == nil,
+      self menu(aSession)
+      ,
+      query := "UPDATE Users SET activated='1' WHERE username='#{user username}'" interpolate
+      aSession server database exec(query)
+      sock clearscreen
+      sock writeln("User #{user username} has been activated." interpolate)
+      sock writeln("Press <ENTER> to return to the previous menu.")
+      sock readln
+      self menu(aSession)
+    )
   )
 
   deactivateuser := method(aSession,
-    self not_yet_implemented(aSession)
-    self menu(aSession)
+    sock := aSession sockethelper
+    user := self promptforuser(aSession)
+    if(user == nil,
+      self menu(aSession)
+      ,
+      query := "UPDATE Users SET activated='0' WHERE username='#{user username}'" interpolate
+      aSession server database exec(query)
+      sock clearscreen
+      sock writeln("User #{user username} has been deactivated." interpolate)
+      sock writeln("Press <ENTER> to return to the previous menu.")
+      sock readln
+      self menu(aSession)
+    )
   )
 
   sysopuser := method(aSession,
-    self not_yet_implemented(aSession)
-    self menu(aSession)
+    sock := aSession sockethelper
+    user := self promptforuser(aSession)
+    if(user == nil,
+      self menu(aSession)
+      ,
+      query := "UPDATE Users SET sysop='1' WHERE username='#{user username}'" interpolate
+      aSession server database exec(query)
+      sock clearscreen
+      sock writeln("User #{user username} has been given sysop privileges." interpolate)
+      sock writeln("Press <ENTER> to return to the previous menu.")
+      sock readln
+      self menu(aSession)
+    )
   )
 
   edituser := method(aSession,
-    self not_yet_implemented(aSession)
-    self menu(aSession)
+    sock := aSession sockethelper
+    user := self promptforuser(aSession)
+    if(user == nil,
+      self menu(aSession)
+      ,
+      sock clearscreen
+      sock writeln("=== Manage Users: Edit User ===")
+      sock writeln("Username: #{user username}" interpolate)
+      sock write("  Change username [y/N]? ")
+      ans := sock readln
+      username := user username
+      realname := user realname
+      email := user email
+      if(ans == "y" or ans == "Y",
+        sock write("New username: ")
+        username = sock readln
+      )
+      sock writeln("Real name: #{user realname}" interpolate)
+      sock write("  Change real name [y/N]? ")
+      ans := sock readln
+      if(ans == "y" or ans == "Y",
+        sock write("New real name: ")
+        realname = sock readln
+      )
+      sock writeln("Email: #{user email}" interpolate)
+      sock write("  Change email? [y/N]? ")
+      ans := sock readln
+      if(ans == "y" or ans == "Y",
+        sock write("New email: ")
+        email = sock readln
+      )
+      user update_info(aSession server, username, realname, email)
+      sock writeln("Press <ENTER> to return to the previous menu.")
+      sock readln
+      self menu(aSession)
+    ) 
+  )
+  
+  passworduser := method(aSession,
+    sock := aSession sockethelper
+    user := self promptforuser(aSession)
+    if(user == nil,
+      self menu(aSession)
+      ,
+      sock clearscreen
+      sock write("Enter new password for user #{user username}: " interpolate)
+      pw := sock readln
+      user update_password(aSession server, pw)
+      sock writeln("Press <ENTER> to return to the previous menu.")
+      sock readln
+      self menu(aSession)
+    )
   )
 )
 

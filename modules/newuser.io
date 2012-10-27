@@ -14,7 +14,7 @@ NewUserModule := Module clone do(
     sock write("Username: ")
     username := sock readln asMutable strip
     while(self check_username(username, aSession server) not,
-      sock writeln("That username is either already in use, or invalid.")
+      sock writeln("  That username is either already in use, or invalid.")
       sock write("Username: ")
       username := sock readln asMutable strip
     )
@@ -23,7 +23,7 @@ NewUserModule := Module clone do(
     sock write("Password: ")
     password := sock readln asMutable strip
     while(self check_password(password) not,
-      sock writeln("That password is invalid.")
+      sock writeln("  That password is invalid.")
       sock write("Password: ")
       password := sock readln asMutable strip
     )
@@ -32,7 +32,7 @@ NewUserModule := Module clone do(
     sock write("Email address: ")
     email := sock readln asMutable strip
     while(self check_email(email) not,
-      sock writeln("That email address is invalid.")
+      sock writeln("  That email address is invalid.")
       sock write("email: ")
       email := sock readln asMutable strip
     )
@@ -41,13 +41,14 @@ NewUserModule := Module clone do(
     sock write("Real name: ")
     realname := sock readln asMutable strip
     while(self check_realname(realname) not,
-      sock writeln("That real name is invalid.")
+      sock writeln("  That real name is invalid.")
       sock write("Real name: ")
       realname := sock readln asMutable strip
     )
     
     // create user
     self save_user(username, password, email, realname, aSession server)
+    sock writeln("")
     sock writeln("Your new user has been created.")
     sock writeln("You will only have GUEST priveleges until your account is activated.")
     sock writeln("To activate your account, send an email to #{SYSOP_EMAIL} from" interpolate)

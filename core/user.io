@@ -19,7 +19,6 @@ User := Object clone do(
   create := method(server,
     db := server database
     query := "INSERT INTO Users ('username', 'password', 'realname', 'email', 'activated', 'sysop') VALUES ('#{self username}', '#{self hashed_password}', '#{self realname}', '#{self email}', 0, 0)" interpolate
-    server log("query = #{query}" interpolate)
     db exec(query)
   )
   
@@ -37,5 +36,15 @@ User := Object clone do(
     u setActivated(row at("activated") == "1")
     u setSysop(row at("sysop") == "1")
     u
+  )
+  
+  update_info := method(server, uname, rname, em,
+    query := "UPDATE Users SET username='#{uname}',realname='#{rname}',email='#{em}' WHERE username='#{self username}'" interpolate
+    server database exec(query)
+  )
+  
+  update_password := method(server, pw,
+    query := "UPDATE Users SET password='#{self hash_password(pw)}' WHERE username='#{self username}'" interpolate
+    server database exec(query)
   )
 )
