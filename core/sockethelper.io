@@ -17,6 +17,9 @@ SocketHelper := Object clone do(
   is := 0
   send := 1
   nop := 241
+  
+  // echo
+  echo := 1
 
   newline := "\r\n"
   
@@ -47,6 +50,17 @@ SocketHelper := Object clone do(
       self empty
       val := self socket readUntilSeq(self newline)
       if(val not or val isError, return self readln, return val) // retry on timeouts
+    )
+  )
+  
+  readpassword := method(
+    if(self socket isOpen,
+      self write(list(self iac, self will, self echo) map(asCharacter) join)
+      if(self socket read, self empty)
+      v := self readln
+      self writeln(list(self iac, self wont, self echo) map(asCharacter) join)
+      if(self socket read, self empty)
+      v
     )
   )
   

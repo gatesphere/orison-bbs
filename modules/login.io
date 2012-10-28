@@ -11,13 +11,13 @@ LoginModule := Module clone do(
     sock writeansi(WELCOME_BANNER)
     sock writeln("Welcome.  Please log in below.  Use NEW to register.")
     sock write("Username: ")
-    username := sock readln asMutable strip
+    username := sock readln
     if(username asLowercase == "new",
       aSession setModule("newuser")
       return
       ,
       sock write("Password: ")
-      password := sock readln asMutable strip
+      password := sock readpassword
       self validate(username, password, aSession)
     )
   )
