@@ -28,7 +28,7 @@ server := Server clone setPort(SERVER_PORT) do(
   
   addModule := method(module,
     self modules atPut(module name, module)
-    if(module db_init != nil, self database exec(module db_init))
+    if(module db_init != nil, self dbExec(module db_init))
     log("Loaded module #{module name}" interpolate)
   )
   
@@ -71,6 +71,15 @@ server := Server clone setPort(SERVER_PORT) do(
     self database close
     log("Server stopped.")
     System exit
+  )
+  
+  dbExec := method(query, values,
+    if(values != nil,
+      newvals := Map clone
+      values foreach(k, v, newvals atPut(k, SQLite3 escapeString(v)))
+      query = query asMutable replaceMap(newvals)
+    )
+    self database exec(query)
   )
 )
 

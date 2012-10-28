@@ -23,8 +23,9 @@ LoginModule := Module clone do(
   )
 
   validate := method(username, password, aSession,
-    db := aSession server database
-    res := db exec("SELECT * from Users where username='#{username}' LIMIT 1" interpolate) at(0)
+    query := "SELECT * FROM Users WHERE username=':un' LIMIT 1"
+    values := Map with(":un", username)
+    res := aSession server dbExec(query, values) at(0)
     if(res == nil, return false)
     u := User from_row(res)
     if(u has_password(password),

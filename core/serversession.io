@@ -37,7 +37,7 @@ ServerSession := Object clone do(
         self current_module process(self)
       )
       e catch(Exception,
-	aServer log("ERROR: #{aSocket address} - #{self user username} -- #{e}" interpolate)
+        aServer log("ERROR: #{aSocket address} - #{self ?user ?username} -- #{e}" interpolate)
         aServer closeSocket(aSocket)
       )
     )

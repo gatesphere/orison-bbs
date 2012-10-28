@@ -53,8 +53,9 @@ ManageUsersModule := Module clone do(
     sock clearscreen
     sock write("Please enter username: ")
     uname := sock readln
-    query := "SELECT * FROM Users WHERE username='#{uname}' LIMIT 1" interpolate
-    user := aSession server database exec(query)
+    values := Map with(":un", uname)
+    query := "SELECT * FROM Users WHERE username=':un' LIMIT 1"
+    user := aSession server dbExec(query, values)
     if(user size == 0,
       sock writeln("No users found with that username.")
       sock writeln("Press <ENTER> to continue.")
@@ -91,8 +92,9 @@ ManageUsersModule := Module clone do(
     if(user == nil,
       self menu(aSession)
       ,
-      query := "UPDATE Users SET activated='1' WHERE username='#{user username}'" interpolate
-      aSession server database exec(query)
+      query := "UPDATE Users SET activated='1' WHERE username=':un'"
+      values := Map with(":un", user username)
+      aSession server dbExec(query, values)
       sock clearscreen
       sock writeln("User #{user username} has been activated." interpolate)
       sock writeln("Press <ENTER> to return to the previous menu.")
@@ -107,8 +109,9 @@ ManageUsersModule := Module clone do(
     if(user == nil,
       self menu(aSession)
       ,
-      query := "UPDATE Users SET activated='0' WHERE username='#{user username}'" interpolate
-      aSession server database exec(query)
+      query := "UPDATE Users SET activated='0' WHERE username=':un'"
+      values := Map with(":un", user username)
+      aSession server dbExec(query, values)
       sock clearscreen
       sock writeln("User #{user username} has been deactivated." interpolate)
       sock writeln("Press <ENTER> to return to the previous menu.")
@@ -123,8 +126,9 @@ ManageUsersModule := Module clone do(
     if(user == nil,
       self menu(aSession)
       ,
-      query := "UPDATE Users SET sysop='1' WHERE username='#{user username}'" interpolate
-      aSession server database exec(query)
+      query := "UPDATE Users SET sysop='1' WHERE username=':un'"
+      values := Map with(":un", user username)
+      aSession server dbExec(query, values)
       sock clearscreen
       sock writeln("User #{user username} has been given sysop privileges." interpolate)
       sock writeln("Press <ENTER> to return to the previous menu.")
