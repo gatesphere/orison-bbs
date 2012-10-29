@@ -1,6 +1,7 @@
 // orison-bbs
 // newuser module
 
+// this module allows someone to create a new account
 NewUserModule := Module clone do(
   name := "newuser"
   description := "Allows users to register."
@@ -58,6 +59,7 @@ NewUserModule := Module clone do(
     aSession setModule("login")
   )
   
+  // check if the username is valid or in use
   check_username := method(username, server,
     if(username size == 0, return false)
     query := "SELECT * FROM Users WHERE username=':un'"
@@ -67,18 +69,30 @@ NewUserModule := Module clone do(
     true
   )
   
+  // checks if password is valid (4 or more characters)
   check_password := method(password,
     password size > 3
   )
   
+  // check if email is valid
   check_email := method(email,
-    email containsSeq("@") and email containsSeq(".")
+    //email containsSeq("@") and email containsSeq(".")
+    if(email occurancesOfSeq("@") != 1, return false)
+    if(email occurancesOfSeq(".") < 1, return false)
+    if(email endsWithSeq("."), return false)
+    x := email findSeq("@")
+    y := email findSeq(".", x)
+    if(y == nil, return false)
+    if(x + 2 >= y, return false)
+    true
   )
   
+  // check if real name is non-empty
   check_realname := method(realname,
     realname size > 0
   )
   
+  // create and save user to the database
   save_user := method(username, password, email, realname, aServer,
     u := User clone
     u setUsername(username) setEmail(email) setRealname(realname)
@@ -86,6 +100,7 @@ NewUserModule := Module clone do(
     u create(aServer)
   )
   
+  // the table required for users
   db_init := "CREATE TABLE Users (id integer primary key autoincrement, username text, password text, email text, realname text, activated integer, sysop integer)"
 )
 

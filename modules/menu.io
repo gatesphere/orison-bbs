@@ -1,6 +1,8 @@
 // orison-bbs
 // login module
 
+// this module provides the main menu of the system
+// processes user input and moves off to other modules
 MenuModule := Module clone do(
   name := "menu"
   description := "Allows interacting with the system."

@@ -1,6 +1,8 @@
 // orison-bbs
 // login module
 
+// this is a sysop module
+// it allows the sysop to change various aspects of users
 ManageUsersModule := Module clone do(
   name := "manageusers"
   description := "Allows the sysop to manage users."
@@ -19,6 +21,7 @@ ManageUsersModule := Module clone do(
     aSession setModule("menu")
   )
 
+  // the main menu
   menu := method(aSession,
     sock := aSession sockethelper
     sock clearscreen
@@ -26,28 +29,29 @@ ManageUsersModule := Module clone do(
     sock writeln(" 1. View user info by username")
     sock writeln(" 2. Activate user by username")
     sock writeln(" 3. Deactivate user by username")
-    sock writeln(" 4. Give user sysop by username")
-    sock writeln(" 5. Edit user info by username")
-    sock writeln(" 6. Change user password")
-    sock writeln(" 7. Return to main menu")
+    sock writeln(" 4. Edit user info by username")
+    sock writeln(" 5. Change user password")
+    sock writeln(" 6. Return to main menu")
     sock write("Please enter your selection: ")
     choice := sock readln
     self processaction(aSession, choice)
   )
  
+  // figure out what the user wanted to do
   processaction := method(aSession, choice,
     choice switch(
       "1", self viewuser(aSession),
       "2", self activateuser(aSession),
       "3", self deactivateuser(aSession),
-      "4", self sysopuser(aSession),
-      "5", self edituser(aSession),
-      "6", self passworduser(aSession),
-      "7", return,
+      "4", self edituser(aSession),
+      "5", self passworduser(aSession),
+      "6", return,
       self menu(aSession)
     )
   )
  
+  // ask for a username, grab that user from the db
+  // return nil if it doesn't exist
   promptforuser := method(aSession,
     sock := aSession sockethelper
     sock clearscreen
@@ -67,6 +71,7 @@ ManageUsersModule := Module clone do(
     )
   )
 
+  // display a user's information
   viewuser := method(aSession,
     sock := aSession sockethelper
     user := self promptforuser(aSession)
@@ -86,6 +91,7 @@ ManageUsersModule := Module clone do(
     )  
   )
 
+  // activate a user
   activateuser := method(aSession,
     sock := aSession sockethelper
     user := self promptforuser(aSession)
@@ -103,6 +109,7 @@ ManageUsersModule := Module clone do(
     )
   )
 
+  // deactivate a user
   deactivateuser := method(aSession,
     sock := aSession sockethelper
     user := self promptforuser(aSession)
@@ -120,23 +127,7 @@ ManageUsersModule := Module clone do(
     )
   )
 
-  sysopuser := method(aSession,
-    sock := aSession sockethelper
-    user := self promptforuser(aSession)
-    if(user == nil,
-      self menu(aSession)
-      ,
-      query := "UPDATE Users SET sysop='1' WHERE username=':un'"
-      values := Map with(":un", user username)
-      aSession server dbExec(query, values)
-      sock clearscreen
-      sock writeln("User #{user username} has been given sysop privileges." interpolate)
-      sock writeln("Press <ENTER> to return to the previous menu.")
-      sock readln
-      self menu(aSession)
-    )
-  )
-
+  // edit a user's information
   edituser := method(aSession,
     sock := aSession sockethelper
     user := self promptforuser(aSession)
@@ -176,6 +167,7 @@ ManageUsersModule := Module clone do(
     ) 
   )
   
+  // change a user's password forcefully
   passworduser := method(aSession,
     sock := aSession sockethelper
     user := self promptforuser(aSession)

@@ -1,6 +1,8 @@
 // orison-bbs
 // socket helper
 
+// this object wraps a raw socket, allowing for easier reads and writes
+// as well as implementing telnet negotiation
 SocketHelper := Object clone do(
   socket ::= nil
   init := method(self setSocket(nil))
@@ -21,16 +23,20 @@ SocketHelper := Object clone do(
   // echo
   echo := 1
 
+  // newline
   newline := "\r\n"
   
+  // write a message without a newline
   write := method(message,
     if(self socket isOpen, self socket write(message))
   )
 
+  // write a message with a newline
   writeln := method(message,
     self write("#{message}#{self newline}" interpolate)
   )
   
+  // write an ansi file to the socket
   writeansi := method(file,
     f := File openForReading(file)
     f foreachLine(l,
@@ -39,12 +45,14 @@ SocketHelper := Object clone do(
     f close
   )
   
+  // empty the socket's readBuffer
   empty := method(
     if(self socket isOpen,
       self socket readBuffer empty
     )
   )
 
+  // read a line from the socket
   readln := method(
     if(self socket isOpen,
       self empty
@@ -53,6 +61,7 @@ SocketHelper := Object clone do(
     )
   )
   
+  // read a password hopefully silently (tell the client to stop echoing)
   readpassword := method(
     if(self socket isOpen,
       self write(list(self iac, self will, self echo) map(asCharacter) join)
@@ -64,6 +73,7 @@ SocketHelper := Object clone do(
     )
   )
   
+  // perform negotiation
   negotiate := method(
     if(self socket isOpen,
       if(self socket read,
@@ -122,8 +132,9 @@ SocketHelper := Object clone do(
     self write(resp map(asCharacter) join)
   )
   
+  // clear the screen and move the cursor to (0,0)
   clearscreen := method(
     self write(ANSIHelper cls)
-    self write(ANSIHelper cursor_set(0,0))
+    self write(ANSIHelper cursor_set(0, 0))
   )
 )

@@ -1,6 +1,8 @@
 // orison-bbs
 // login module
 
+// this module is the entry point for the system
+// this allows users to log in, or create a new user
 LoginModule := Module clone do(
   name := "login"
   description := "Allows logging into the system."
@@ -22,6 +24,7 @@ LoginModule := Module clone do(
     )
   )
 
+  // validates whether a valid username/password combination was provided
   validate := method(username, password, aSession,
     query := "SELECT * FROM Users WHERE username=':un' LIMIT 1"
     values := Map with(":un", username)

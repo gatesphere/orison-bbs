@@ -1,6 +1,8 @@
 // orison-bbs
 // module loader
 
+// this is the Module proto
+// modules must clone this proto
 Module := Object clone do(
   name ::= nil
   description ::= nil
@@ -15,6 +17,7 @@ Module := Object clone do(
   )
 )
 
+// this bit loads all the modules
 list(
   // user modules
   "login.io",

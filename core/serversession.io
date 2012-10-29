@@ -1,6 +1,7 @@
 // orison-bbs
 // server session
 
+// this object encapsulates a session and provides control between modules
 ServerSession := Object clone do(
   user ::= nil
   current_module ::= nil
@@ -16,10 +17,12 @@ ServerSession := Object clone do(
     self setSockethelper(nil)
   )
   
+  // change the current module presented to the user
   setModule := method(module,
     self setCurrent_module(self server modules at(module) clone)
   )
   
+  // loop, performing module processing
   process := method(aSocket, aServer,
     self server := aServer
     self socket := aSocket

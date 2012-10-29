@@ -1,6 +1,8 @@
 // orison-bbs
 // login module
 
+// this is a sysop module
+// this module reloads all modules
 ReloadModulesModule := Module clone do(
   name := "reloadmodules"
   description := "Reloads all the modules."

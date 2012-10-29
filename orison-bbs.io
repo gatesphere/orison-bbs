@@ -4,12 +4,13 @@
 // loader
 
 // server config
+// see the README.md file for information on these variables
 DATABASE_FILE := "orison-bbs.sqlite3"
 DATABASE_DEBUG := true
 SERVER_PORT := 23
 SERVER_LOGGING := true
 SERVER_LOGFILE := "orison-bbs.log"
-#WELCOME_BANNER := "welcomebanner.ansi"
+//WELCOME_BANNER := "welcomebanner.ansi"
 WELCOME_BANNER := "welcomebanner.test.ansi"
 SYSOP_EMAIL := "sysop@suspended-chord.info"
 

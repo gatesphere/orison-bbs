@@ -1,6 +1,8 @@
 // orison-bbs
 // login module
 
+// this is a sysop module
+// it shuts the server down gracefully
 ServerShutdownModule := Module clone do(
   name := "servershutdown"
   description := "Stops the server gracefully."
