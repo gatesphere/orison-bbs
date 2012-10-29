@@ -38,7 +38,7 @@ is described here:
 Variable       | Default Value         | Purpose
 ---------------|-----------------------|--------
 DATABASE_FILE  | "orison-bbs.sqlite3"  | The location of the SQLite3 database
-DATABASE_DEBUG | true                  | Log the database queries?  (Useful for development)
+DATABASE_DEBUG | false                 | Log the database queries?  (Useful for development)
 SERVER_PORT    | 23                    | Port to bind to
 SERVER_LOGGING | true                  | Enable logging?
 SERVER_LOGFILE | "orison-bbs.log"      | The file to log to
@@ -61,5 +61,5 @@ Sign in as sysop.  Select the "Reload modules" option.
 
 License
 -------
-This software is licensed under the BSD license.
+This software is licensed under the [BSD license](https://github.com/gatesphere/orison-bbs/raw/master/license/license.txt).
 
