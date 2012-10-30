@@ -24,6 +24,7 @@ list(
   "logout.io",
   "newuser.io",
   "menu.io",
+  "conferencehall.io",
   // sysop modules
   "reloadmodules.io",
   "servershutdown.io",
