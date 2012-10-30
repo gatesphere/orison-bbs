@@ -7,6 +7,7 @@ SocketHelper := Object clone do(
   socket ::= nil
   init := method(self setSocket(nil))
   with := method(aSocket, self clone setSocket(aSocket))
+  has_negotiated := false
   
   // negotiation stuff
   iac := 255
@@ -53,38 +54,36 @@ SocketHelper := Object clone do(
   )
 
   // read a line from the socket
-  readln := method(
+  readln := method(stripnegotiate,
     if(self socket isOpen,
-      self empty
       val := self socket readUntilSeq(self newline)
-      if(val not or val isError, return self readln, return val) // retry on timeouts
+      if(val not or val isError, 
+        return self readln // retry on timeouts
+        , 
+        if(val at(0) == self iac, val := self negotiate(val, stripnegotiate))
+        return val
+      ) 
     )
   )
   
   // read a password hopefully silently (tell the client to stop echoing)
   readpassword := method(
     if(self socket isOpen,
-      self write(list(self iac, self will, self echo) map(asCharacter) join)
-      if(self socket read, self empty)
+      if(self has_negotiated, self write(list(self iac, self will, self echo) map(asCharacter) join))
       v := self readln
-      self writeln(list(self iac, self wont, self echo) map(asCharacter) join)
-      if(self socket read, self empty)
+      if(self has_negotiated, self writeln(list(self iac, self wont, self echo) map(asCharacter) join))
       v
     )
   )
   
   // perform negotiation
-  negotiate := method(
-    if(self socket isOpen,
-      if(self socket read,
-        self negotiateWrite(self socket readBuffer)
-        self empty
-      )
-    )
+  negotiate := method(val,
+    self has_negotiated = true
+    self negotiateWrite(val)
   )
   
   // dumb server - reject any attempts to negotiate.
-  negotiateWrite := method(commands,
+  negotiateWrite := method(commands, strip,
     resp := list
     iac_rcvd := false
     will_rcvd := false
@@ -93,7 +92,8 @@ SocketHelper := Object clone do(
     dont_rcvd := false
     sb_rcvd := false
     cmd_end := false
-    commands foreach(c,
+    end_of_commands := 0
+    commands foreach(i, c,
       if(sb_rcvd and c != self se, continue, sb_rcvd = false)
       if(c == self iac, iac_rcvd = true; continue)
       if(c == self will, will_rcvd = true; continue)
@@ -101,20 +101,29 @@ SocketHelper := Object clone do(
       if(c == self wont, wont_rcvd = true; continue)
       if(c == self dont, dont_rcvd = true; continue)
       if(c == self sb, sb_rcvd = true; continue)
+      if(iac_rcvd not, end_of_commands = i; break) 
       if(iac_rcvd,
         if(will_rcvd,
+          //writeln("IAC WILL ", c)
+          //writeln("reply: IAC DONT ", c)
           resp append(self iac) append(self dont) append(c)
           cmd_end = true
         )
         if(wont_rcvd, 
+          //writeln("IAC WONT ", c)
+          //writeln("reply: IAC DONT ", c)
           resp append(self iac) append(self dont) append(c)
           cmd_end = true
         )
         if(do_rcvd, 
+          //writeln("IAC DO ", c)
+          //writeln("reply: IAC WONT ", c)
           resp append(self iac) append(self wont) append(c)
           cmd_end = true
         )
         if(dont_rcvd, 
+          //writeln("IAC DONT ", c)
+          //writeln("reply: IAC WONT ", c)
           resp append(self iac) append(self wont) append(c)
           cmd_end = true
         )
@@ -129,7 +138,10 @@ SocketHelper := Object clone do(
         )
       )
     )
-    self write(resp map(asCharacter) join)
+    if(strip not, self write(resp map(asCharacter) join))
+    val := commands exSlice(end_of_commands)
+    //writeln("val = ", val)
+    val
   )
   
   // clear the screen and move the cursor to (0,0)
