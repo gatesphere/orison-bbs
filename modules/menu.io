@@ -1,5 +1,5 @@
 // orison-bbs
-// login module
+// menu module
 
 // this module provides the main menu of the system
 // processes user input and moves off to other modules

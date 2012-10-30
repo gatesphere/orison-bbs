@@ -1,5 +1,5 @@
 // orison-bbs
-// login module
+// logout module
 
 // this module displays a goodbye message and logs out a user
 LogoutModule := Module clone do(

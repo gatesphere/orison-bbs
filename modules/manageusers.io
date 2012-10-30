@@ -1,5 +1,5 @@
 // orison-bbs
-// login module
+// manage users module
 
 // this is a sysop module
 // it allows the sysop to change various aspects of users

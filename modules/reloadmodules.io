@@ -1,5 +1,5 @@
 // orison-bbs
-// login module
+// reload modules module
 
 // this is a sysop module
 // this module reloads all modules

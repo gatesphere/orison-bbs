@@ -1,5 +1,5 @@
 // orison-bbs
-// login module
+// server shutdown module
 
 // this is a sysop module
 // it shuts the server down gracefully

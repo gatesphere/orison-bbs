@@ -27,5 +27,6 @@ list(
   // sysop modules
   "reloadmodules.io",
   "servershutdown.io",
+  "manageconferences.io",
   "manageusers.io"
 ) foreach(m, doFile("modules/#{m}" interpolate))
