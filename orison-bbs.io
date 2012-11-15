@@ -5,6 +5,7 @@
 
 // server config
 // see the README.md file for information on these variables
+BBS_NAME := "orison-bbs"
 DATABASE_FILE := "orison-bbs.sqlite3"
 DATABASE_DEBUG := true
 SERVER_PORT := 23

@@ -11,7 +11,7 @@ MenuModule := Module clone do(
     sock := aSession sockethelper
     sock clearscreen
     user := aSession user
-    sock writeln("Welcome to orison-bbs, #{user username}." interpolate)
+    sock writeln("Welcome to #{BBS_NAME}, #{user username}." interpolate)
     if(user activated not, 
       sock writeln("Your account is not activated.  Guest access only.")
     )

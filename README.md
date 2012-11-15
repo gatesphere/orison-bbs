@@ -37,6 +37,7 @@ is described here:
 
 Variable       | Default Value         | Purpose
 ---------------|-----------------------|--------
+BBS_NAME       | "orison-bbs"          | The name of the bbs, used in various places
 DATABASE_FILE  | "orison-bbs.sqlite3"  | The location of the SQLite3 database
 DATABASE_DEBUG | false                 | Log the database queries?  (Useful for development)
 SERVER_PORT    | 23                    | Port to bind to
