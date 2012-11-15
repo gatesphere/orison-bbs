@@ -28,11 +28,13 @@ ManageConferencesModule := Module clone do(
     sock writeln("=== Manage Conferences: Main ===")
     sock writeln(" 1. Create new category")
     sock writeln(" 2. Delete category")
-    sock writeln(" 3. Create new conference")
-    sock writeln(" 4. Delete conference")
-    sock writeln(" 5. Delete post")
-    sock writeln(" 6. Delete discussion")
-    sock writeln(" 7. Return to main menu")
+    sock writeln(" 3. Rename category")
+    sock writeln(" 4. Create new conference")
+    sock writeln(" 5. Delete conference")
+    sock writeln(" 6. Rename conference")
+    sock writeln(" 7. Delete post")
+    sock writeln(" 8. Delete discussion")
+    sock writeln(" 9. Return to main menu")
     sock write("Please enter your selection: ")
     choice := sock readln
     self processaction(aSession, choice)
@@ -43,11 +45,13 @@ ManageConferencesModule := Module clone do(
     choice switch(
       "1", self newcategory(aSession),
       "2", self deletecategory(aSession),
-      "3", self newconference(aSession),
-      "4", self deleteconference(aSession),
-      "5", self deletepost(aSession),
-      "6", self deletediscussion(aSession),
-      "7", return,
+      "3", self renamecategory(aSession),
+      "4", self newconference(aSession),
+      "5", self deleteconference(aSession),
+      "6", self renameconference(aSession),
+      "7", self deletepost(aSession),
+      "8", self deletediscussion(aSession),
+      "9", return,
       self menu(aSession)
     )
   )
@@ -80,9 +84,9 @@ ManageConferencesModule := Module clone do(
     query := "SELECT * FROM Conferences WHERE name=':cn' LIMIT 1"
     conf := aSession server dbExec(query, values)
     if(conf size == 0,
-      nil
+      list(cname, nil)
       ,
-      conf at(0)
+      list(cname, conf at(0))
     )
   )
   
@@ -97,9 +101,9 @@ ManageConferencesModule := Module clone do(
     query := "SELECT * FROM Posts WHERE id=':pid' LIMIT 1"
     post := aSession server dbExec(query, values)
     if(post size == 0,
-      nil
+      list(pid, nil)
       ,
-      post at(0)
+      list(pid, post at(0))
     )
   )
 
@@ -114,9 +118,9 @@ ManageConferencesModule := Module clone do(
     query := "SELECT * FROM Discussions WHERE id=':did' LIMIT 1"
     post := aSession server dbExec(query, values)
     if(post size == 0,
-      nil
+      list(did, nil)
       ,
-      post at(0)
+      list(did, post at(0))
     )
   )
   
@@ -126,17 +130,17 @@ ManageConferencesModule := Module clone do(
     values := Map with(":cid", row at("id"))
     discussions := aSession server dbExec(query, values)
     discussions foreach(d, self removediscussion(aSession, d))
-    query := "DELETE * FROM Conferences WHERE id=':id'"
+    query := "DELETE FROM Conferences WHERE id=':id'"
     values := Map with(":id", row at("id"))
     aSession server dbExec(query, values)  
   )
   
   // removes a discussion and all child posts
   removediscussion := method(aSession, row,
-    query := "DELETE * FROM Posts WHERE parent=':did'"
+    query := "DELETE FROM Posts WHERE parent=':did'"
     values := Map with(":did", row at("id"))
     aSession server dbExec(query, values)
-    query := "DELETE * FROM Discussions WHERE id=':id'"
+    query := "DELETE FROM Discussions WHERE id=':id'"
     values := Map with(":id", row at("id"))
     aSession server dbExec(query, values)
   )
@@ -187,24 +191,144 @@ ManageConferencesModule := Module clone do(
     )
     self menu(aSession)
   )
+  
+  renamecategory := method(aSession,
+    sock := aSession sockethelper
+    category := self promptforcategory(aSession)
+    sock clearscreen
+    if(category at(1) == nil,
+      sock writeln("Category #{category at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      n := ""
+      loop(
+        sock write("Please enter new category name: ")
+        n = sock readln
+        query := "SELECT * FROM Categories WHERE name=':name'"
+        values := Map with(":name", n)
+        cs := aSession server dbExec(query, values)
+        if(cs size == 0,
+          break
+          ,
+          sock println("That name is already in use.  Please try again.")
+        )
+      )
+      query := "UPDATE Categories SET name=':name' WHERE id=':id'"
+      values := Map with(":name", n, ":id", category at(0) at("id"))
+      aSession server dbExec(query, values)
+      sock writeln("Category renamed.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
+    self menu(aSession)
+  )
 
   newconference := method(aSession,
-    self not_yet_implemented(aSession)
+    sock := aSession sockethelper
+    conference := self promptforconference(aSession)
+    sock clearscreen
+    if(conference at(1) != nil,
+      sock writeln("Conference #{conference at(0)} already exists." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      sock writeln("Creating conference...")
+      query := "INSERT INTO Conferences ('name') VALUES (':name')"
+      values := Map with(":name", conference at(0))
+      aSession server dbExec(query, values)
+      sock writeln("Conference created.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
     self menu(aSession)
   )
 
   deleteconference := method(aSession,
-    self not_yet_implemented(aSession)
+    sock := aSession sockethelper
+    conference := self promptforconference(aSession)
+    sock clearscreen
+    if(conference at(1) == nil,
+      sock writeln("Conference #{conference at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      sock writeln("Deleting conference...")
+      sock writeln("Deleting children...")
+      self removeconference(aSession, conference at(1))
+      sock writeln("Conference deleted.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
+    self menu(aSession)
+  )
+
+  renameconference := method(aSession,
+    sock := aSession sockethelper
+    conference := self promptforconference(aSession)
+    sock clearscreen
+    if(conference at(1) == nil,
+      sock writeln("Conference #{conference at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      n := ""
+      loop(
+        sock write("Please enter new conference name: ")
+        n = sock readln
+        query := "SELECT * FROM Conferences WHERE name=':name'"
+        values := Map with(":name", n)
+        cs := aSession server dbExec(query, values)
+        if(cs size == 0,
+          break
+          ,
+          sock println("That name is already in use.  Please try again.")
+        )
+      )
+      query := "UPDATE Conferences SET name=':name' WHERE id=':id'"
+      values := Map with(":name", n, ":id", category at(0) at("id"))
+      aSession server dbExec(query, values)
+      sock writeln("Conference renamed.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
     self menu(aSession)
   )
 
   deletepost := method(aSession,
-    self not_yet_implemented(aSession)
+    sock := aSession sockethelper
+    post := self promptforpost(aSession)
+    if(post at(1) == nil,
+      sock writeln("Post with id #{post at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      sock writeln("Deleting post...")
+      query := "DELETE FROM Posts WHERE id=':pid'"
+      values := Map with(":pid", post at(0))
+      aSession server dbExec(query, values)
+      sock writeln("Post deleted.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
     self menu(aSession)
   )
 
   deletediscussion := method(aSession,
-    self not_yet_implemented(aSession)
+    sock := aSession sockethelper
+    discussion := self promptfordiscussion(aSession)
+    if(discussion at(1) == nil,
+      sock writeln("Discussion with id #{discussion at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      ,
+      sock writeln("Deleting discussion...")
+      sock writeln("Deleting children...")
+      self removediscussion(aSession, discussion at(1))
+      sock writeln("Discussion deleted.")
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+    )
     self menu(aSession)
   )
 )
