@@ -6,7 +6,6 @@
 Module := Object clone do(
   name ::= nil
   description ::= nil
-  db_init ::= nil
 
   not_yet_implemented := method(aSession,
     sock := aSession sockethelper

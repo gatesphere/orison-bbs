@@ -35,7 +35,6 @@ server := Server clone setPort(SERVER_PORT) do(
   // register a module to the server, initializing the db if necessary
   addModule := method(module,
     self modules atPut(module name, module)
-    if(module db_init != nil, self dbExec(module db_init))
     log("Loaded module #{module name}" interpolate)
   )
   
@@ -45,6 +44,7 @@ server := Server clone setPort(SERVER_PORT) do(
     self database := SQLite3 clone setPath(DATABASE_FILE)
     self database open
     if(DATABASE_DEBUG, self database debugOn)
+    Lobby doFile("db-init/db-init.io")
     log("Database initialized.")
   )
   
