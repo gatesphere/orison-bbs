@@ -6,7 +6,7 @@ list(
   "users.sql",
   "conferences.sql"
 ) foreach(m, 
-  f := File openForReading(m)
+  f := File openForReading("db-init/#{m}" interpolate)
   server dbExec(f contents)
   f close
 )
