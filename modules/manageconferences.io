@@ -56,6 +56,11 @@ ManageConferencesModule := Module clone do(
     )
   )
 
+  // is it a valid name? (i.e., size > 0)
+  validname := method(str,
+    str size > 0
+  )
+
   // ask for a category, grab that category from the db
   // return nil if it doesn't exist
   promptforcategory := method(aSession,
@@ -75,13 +80,13 @@ ManageConferencesModule := Module clone do(
 
   // ask for a conference, grab that conference from the db
   // return nil if it doesn't exist
-  promptforconference := method(aSession,
+  promptforconference := method(aSession, category,
     sock := aSession sockethelper
     sock clearscreen
     sock write("Please enter conference name: ")
     cname := sock readln
-    values := Map with(":cn", cname)
-    query := "SELECT * FROM Conferences WHERE name=':cn' LIMIT 1"
+    values := Map with(":cn", cname, ":pid", category at("id"))
+    query := "SELECT * FROM Conferences WHERE name=':cn' AND parent=':pid' LIMIT 1"
     conf := aSession server dbExec(query, values)
     if(conf size == 0,
       list(cname, nil)
@@ -126,6 +131,7 @@ ManageConferencesModule := Module clone do(
   
   // removes a conference and all children (discussions and posts)
   removeconference := method(aSession, row,
+    aSession server log(row keys, row values)
     query := "SELECT * FROM Discussions WHERE parent=':cid'"
     values := Map with(":cid", row at("id"))
     discussions := aSession server dbExec(query, values)
@@ -181,8 +187,8 @@ ManageConferencesModule := Module clone do(
       
       sock writeln("Deleting children...")
       // conferences
-      query := "SELECT FROM Conferences WHERE parent=':cid'"
-      values := Map with(":cid", category at(0) at("id"))
+      query := "SELECT * FROM Conferences WHERE parent=':cid'"
+      values := Map with(":cid", category at(1) at("id"))
       conferences := aSession server dbExec(query, values)
       conferences foreach(c, self removeconference(aSession, c))
       sock writeln("Category deleted.")
@@ -215,7 +221,7 @@ ManageConferencesModule := Module clone do(
         )
       )
       query := "UPDATE Categories SET name=':name' WHERE id=':id'"
-      values := Map with(":name", n, ":id", category at(0) at("id"))
+      values := Map with(":name", n, ":id", category at(1) at("id"))
       aSession server dbExec(query, values)
       sock writeln("Category renamed.")
       sock writeln("Press <ENTER> to continue.")
@@ -226,7 +232,14 @@ ManageConferencesModule := Module clone do(
 
   newconference := method(aSession,
     sock := aSession sockethelper
-    conference := self promptforconference(aSession)
+    category := self promptforcategory(aSession)
+    if(category at(1) == nil,
+      sock writeln("Category #{category at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      return
+    )
+    conference := self promptforconference(aSession, category at(1))
     sock clearscreen
     if(conference at(1) != nil,
       sock writeln("Conference #{conference at(0)} already exists." interpolate)
@@ -234,8 +247,8 @@ ManageConferencesModule := Module clone do(
       sock readln
       ,
       sock writeln("Creating conference...")
-      query := "INSERT INTO Conferences ('name') VALUES (':name')"
-      values := Map with(":name", conference at(0))
+      query := "INSERT INTO Conferences ('name','parent') VALUES (':name',':pid')"
+      values := Map with(":name", conference at(0), ":pid", category at(1) at("id"))
       aSession server dbExec(query, values)
       sock writeln("Conference created.")
       sock writeln("Press <ENTER> to continue.")
@@ -246,7 +259,14 @@ ManageConferencesModule := Module clone do(
 
   deleteconference := method(aSession,
     sock := aSession sockethelper
-    conference := self promptforconference(aSession)
+    category := self promptforcategory(aSession)
+    if(category at(1) == nil,
+      sock writeln("Category #{category at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      return
+    )
+    conference := self promptforconference(aSession, category at(1))
     sock clearscreen
     if(conference at(1) == nil,
       sock writeln("Conference #{conference at(0)} does not exist." interpolate)
@@ -265,7 +285,14 @@ ManageConferencesModule := Module clone do(
 
   renameconference := method(aSession,
     sock := aSession sockethelper
-    conference := self promptforconference(aSession)
+    category := self promptforcategory(aSession)
+    if(category at(1) == nil,
+      sock writeln("Category #{category at(0)} does not exist." interpolate)
+      sock writeln("Press <ENTER> to continue.")
+      sock readln
+      return
+    )
+    conference := self promptforconference(aSession, category at(1))
     sock clearscreen
     if(conference at(1) == nil,
       sock writeln("Conference #{conference at(0)} does not exist." interpolate)
@@ -286,7 +313,7 @@ ManageConferencesModule := Module clone do(
         )
       )
       query := "UPDATE Conferences SET name=':name' WHERE id=':id'"
-      values := Map with(":name", n, ":id", category at(0) at("id"))
+      values := Map with(":name", n, ":id", conference at(1) at("id"))
       aSession server dbExec(query, values)
       sock writeln("Conference renamed.")
       sock writeln("Press <ENTER> to continue.")
